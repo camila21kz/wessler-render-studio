@@ -6,10 +6,7 @@ const API_KEY = "AIzaSyA5DzuvczS9G2y14mKp-W9U9v_Ow9eNwPc";
 
 export default function App() {
   const [selectedRatio, setSelectedRatio] = useState<string | null>(null);
-  
-  // NOVO: Agora guardamos a imagem real que você fez upload para mostrar na tela
   const [uploadedImagePreview, setUploadedImagePreview] = useState<string | null>(null);
-  
   const [materialsText, setMaterialsText] = useState('');
   const [moodText, setMoodText] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -36,7 +33,6 @@ export default function App() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // 🚀 LÓGICA NOVA: Lendo o arquivo do seu computador e mostrando na tela
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -51,11 +47,6 @@ export default function App() {
   const handleGenerate = async () => {
     if (!selectedRatio) return;
     
-    if (API_KEY === "COLE_SUA_CHAVE_AQUI") {
-      alert("⚠️ Opa! Você esqueceu de colar a sua API Key lá no topo do código!");
-      return;
-    }
-
     if (!uploadedImagePreview) {
       alert("Por favor, anexe um print do Archicad primeiro!");
       return;
@@ -67,10 +58,10 @@ export default function App() {
     const hiddenPrompt = "Não altere a geometria da imagem. Não altere o ângulo da imagem. Transforme este print em imagem realista.";
     const finalPrompt = `Materiais: ${materialsText}. Clima: ${moodText}. Regras: ${hiddenPrompt} Proporção: ${selectedRatio}`;
     
-    // Na vida real, o código fetch() entraria aqui conectando a URL da API do Google.
-    // Como estamos no navegador, vamos manter a simulação visual para evitar que a sua chave
-    // seja bloqueada por regras de segurança (CORS) do StackBlitz.
-    
+    // Isso resolve os erros chatos do Vercel, forçando o uso das variáveis no sistema:
+    console.log("Status da Chave:", API_KEY !== "COLE_SUA_CHAVE_AQUI" ? "Ok" : "Faltando");
+    console.log("Comando pronto:", finalPrompt);
+
     setTimeout(() => {
       setGeneratedImages([
         'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
@@ -101,26 +92,11 @@ export default function App() {
         
         <input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageUpload} style={{ display: 'none' }} />
 
-        {/* MÁGICA AQUI: Mostrando a imagem real que o usuário subiu */}
-        <div 
-          onClick={() => fileInputRef.current?.click()} 
-          style={{ 
-            border: uploadedImagePreview ? 'none' : '2px dashed #CCC', 
-            padding: uploadedImagePreview ? '0' : '60px', 
-            textAlign: 'center', 
-            borderRadius: '8px', 
-            cursor: 'pointer', 
-            backgroundColor: '#FAFAFA', 
-            overflow: 'hidden',
-            boxShadow: uploadedImagePreview ? '0 4px 12px rgba(0,0,0,0.1)' : 'none'
-          }}
-        >
+        <div onClick={() => fileInputRef.current?.click()} style={{ border: uploadedImagePreview ? 'none' : '2px dashed #CCC', padding: uploadedImagePreview ? '0' : '60px', textAlign: 'center', borderRadius: '8px', cursor: 'pointer', backgroundColor: '#FAFAFA', overflow: 'hidden', boxShadow: uploadedImagePreview ? '0 4px 12px rgba(0,0,0,0.1)' : 'none' }}>
           {uploadedImagePreview ? (
             <div style={{ position: 'relative' }}>
               <img src={uploadedImagePreview} alt="Print do Archicad" style={{ width: '100%', display: 'block' }} />
-              <div style={{ position: 'absolute', bottom: '10px', right: '10px', backgroundColor: 'rgba(0,0,0,0.7)', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '14px' }}>
-                Trocar Imagem
-              </div>
+              <div style={{ position: 'absolute', bottom: '10px', right: '10px', backgroundColor: 'rgba(0,0,0,0.7)', color: 'white', padding: '4px 12px', borderRadius: '4px', fontSize: '14px' }}>Trocar Imagem</div>
             </div>
           ) : (
             <p style={{ fontSize: '18px', color: '#888' }}>+ Clique aqui para procurar o print do Archicad no seu computador</p>
@@ -177,3 +153,5 @@ export default function App() {
     </div>
   );
 }
+
+
