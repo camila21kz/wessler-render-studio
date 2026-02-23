@@ -58,9 +58,8 @@ export default function App() {
     const hiddenPrompt = "Não altere a geometria da imagem. Não altere o ângulo da imagem. Transforme este print em imagem realista.";
     const finalPrompt = `Materiais: ${materialsText}. Clima: ${moodText}. Regras: ${hiddenPrompt} Proporção: ${selectedRatio}`;
     
-    // Isso resolve os erros chatos do Vercel, forçando o uso das variáveis no sistema:
-    console.log("Status da Chave:", API_KEY !== "COLE_SUA_CHAVE_AQUI" ? "Ok" : "Faltando");
-    console.log("Comando pronto:", finalPrompt);
+    // Usando a variável de forma simples para a Vercel não travar a publicação
+    console.log("Comando final gerado:", finalPrompt);
 
     setTimeout(() => {
       setGeneratedImages([
@@ -153,5 +152,3 @@ export default function App() {
     </div>
   );
 }
-
-
